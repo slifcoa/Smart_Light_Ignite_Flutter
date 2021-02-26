@@ -1,19 +1,10 @@
-import 'package:flutter/foundation.dart';
-import "dart:io";
 import 'package:flutter/material.dart';
 
-void main() async {
-  print("Running Main");
-  Socket sock = await Socket.connect('10.0.0.35', 80);
-  runApp(MyApp(sock));
+void main() {
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  Socket socket;
-
-  MyApp(Socket s) {
-    this.socket = s;
-  }
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -35,18 +26,13 @@ class MyApp extends StatelessWidget {
         // closer together (more dense) than on mobile platforms.
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MyHomePage(
-          title: 'Purple Cloud',
-          channel: socket,
-      ),
+      home: MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  final Socket channel;
-
-  MyHomePage({Key key, this.title, this.channel}) : super(key: key);
+  MyHomePage({Key key, this.title}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -77,22 +63,6 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  void _enableLight() {
-    print("Enabling Light");
-    widget.channel.write("LIGHT=ON\n");
-  }
-
-  void _disableLight() {
-    print("Disabling Light");
-    widget.channel.write("LIGHT=OFF\n");
-  }
-
-  @override
-  void dispose() {
-    widget.channel.close();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -102,18 +72,14 @@ class _MyHomePageState extends State<MyHomePage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return Scaffold(
-      backgroundColor: Colors.grey,
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title, textAlign: TextAlign.center),
-        backgroundColor: Colors.purple,
-
+        title: Text(widget.title),
       ),
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
-
         child: Column(
           // Column is also a layout widget. It takes a list of children and
           // arranges them vertically. By default, it sizes itself to fit its
@@ -131,32 +97,21 @@ class _MyHomePageState extends State<MyHomePage> {
           // horizontal).
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            RaisedButton(
-              child: Text("Turn Light On",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontStyle: FontStyle.normal,
-                  fontSize: 20.0
-                )
-              ),
-              color: Colors.green,
-              onPressed: _enableLight,
+            Text(
+              'You have pushed the button this many times:',
             ),
-            RaisedButton(
-              child: Text("Turn Light Off",
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontStyle: FontStyle.normal,
-                      fontSize: 20.0
-                  )
-              ),
-              color: Colors.red,
-              onPressed: _disableLight,
-            )
+            Text(
+              '$_counter',
+              style: Theme.of(context).textTheme.headline4,
+            ),
           ],
         ),
       ),
-
+      floatingActionButton: FloatingActionButton(
+        onPressed: _incrementCounter,
+        tooltip: 'Increment',
+        child: Icon(Icons.add),
+      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
